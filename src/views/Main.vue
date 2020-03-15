@@ -1,7 +1,7 @@
 <template>
   <div class="main">
-    <button @click="goToAuth">Click here to authenticate yoself</button>
-    <auth />
+    <button @click="goToAuth">Class style auth</button>
+    <button>Composition API auth</button>
   </div>
 </template>
 
@@ -19,10 +19,13 @@ export default class Main extends Vue {
 <style lang="scss" scoped>
 .main {
   display: flex;
-  justify-content: center;
-  margin-top: 50px;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 25px;
   button {
     width: 350px;
+    padding: 10px;
+    margin: 10px 0;
     font-size: 32px;
     background-color: transparent;
     color: #e2ef70;
