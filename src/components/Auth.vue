@@ -14,17 +14,33 @@
       </div>
       <div class="input-group">
         <label for="sign-up">Sign Up</label>
-        <input type="radio" id="sign-up" v-model="authMethodPicked" value="sign-up" name="auth" />
+        <input
+          type="radio"
+          id="sign-up"
+          v-model="authMethodPicked"
+          value="sign-up"
+          name="auth"
+        />
       </div>
     </form>
     <form @submit.prevent="onAuthSubmit" class="creds-form">
       <div class="form-group">
         <label for="email">Email</label>
-        <input id="email" type="email" v-model="userDetails.email" placeholder="Email" />
+        <input
+          id="email"
+          type="email"
+          v-model="userDetails.email"
+          placeholder="Email"
+        />
       </div>
       <div class="form-group">
         <label for="password">Password</label>
-        <input id="password" type="password" v-model="userDetails.password" placeholder="Password" />
+        <input
+          id="password"
+          type="password"
+          v-model="userDetails.password"
+          placeholder="Password"
+        />
       </div>
       <div v-if="authMethodPicked === 'sign-up'" class="form-group">
         <label for="password-confirmation">Confirm</label>
@@ -35,13 +51,15 @@
           placeholder="Confirm Password"
         />
       </div>
-      <button type="submit">{{ authMethodPicked === 'log-in' ? 'Log In' : 'Sign Up' }}</button>
+      <button type="submit">
+        {{ authMethodPicked === 'log-in' ? 'Log In' : 'Sign Up' }}
+      </button>
     </form>
   </div>
 </template>
 
 <script lang="ts">
-import { Vue, Component, Watch } from 'vue-property-decorator'
+import { Vue, Component } from 'vue-property-decorator'
 import { UserCredentialDetails } from '@/classes'
 import AuthStore from '@/store/authStore'
 import firebase from 'firebase'
@@ -57,13 +75,6 @@ export default class Auth extends Vue {
 
   get loggedInStatus() {
     return AuthStore.isLoggedIn
-  }
-
-  @Watch('loggedInStatus', { deep: true })
-  watchLoggedInStatus(val: boolean) {
-    if (val === true) {
-      this.$router.push({ name: 'main' })
-    }
   }
 
   logIn() {

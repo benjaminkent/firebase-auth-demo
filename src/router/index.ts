@@ -11,10 +11,20 @@ const routes = [
     component: Main,
   },
   {
-    path: '/authenticate-yoself',
-    name: 'auth',
+    path: '/class-auth',
+    name: 'classAuth',
     component: () =>
-      import(/* webpackChunkName: "AuthLayout" */ '../views/AuthLayout.vue'),
+      import(
+        /* webpackChunkName: "ClassAuthLayout" */ '../views/ClassAuthLayout.vue'
+      ),
+  },
+  {
+    path: '/composition-auth',
+    name: 'compositionAuth',
+    component: () =>
+      import(
+        /* webpackChunkName: "CompositionAuthLayout" */ '../views/CompositionAuthLayout.vue'
+      ),
   },
 ]
 

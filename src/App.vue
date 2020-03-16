@@ -1,9 +1,6 @@
 <template>
   <div id="app">
-    <header>
-      <h3>Auth Test</h3>
-      <button v-if="authStatus" @click="logOut">Log Out</button>
-    </header>
+    <app-header v-if="this.$route.name === 'main'" />
     <div v-if="loading" class="loading">
       <h1>Loading...</h1>
     </div>
@@ -14,12 +11,17 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import AuthStore from '@/store/authStore'
+import AppHeader from '@/components/AppHeader.vue'
 
 // auth
 import firebase from 'firebase'
 import { firebaseConfig } from '@/config/firebase'
 
-@Component({})
+@Component({
+  components: {
+    AppHeader,
+  },
+})
 export default class App extends Vue {
   loading = false
 
@@ -56,14 +58,6 @@ export default class App extends Vue {
         .catch(error => console.error(error))
     }
   }
-
-  get authStatus() {
-    return AuthStore.isLoggedIn
-  }
-
-  logOut() {
-    firebase.auth().signOut()
-  }
 }
 </script>
 
@@ -76,30 +70,7 @@ body {
   margin: 0;
   background: #333;
 }
-header {
-  background-color: #070707;
-  width: 100vw;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 0;
-  h3 {
-    margin: 0 0 0 20px;
-    color: #eee;
-  }
-  button {
-    margin-right: 20px;
-    padding: 0 5px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-    background-color: #ccc;
-    color: #666;
-    cursor: pointer;
-  }
-  button:hover {
-    background-color: #bbb;
-  }
-}
+
 .loading {
   color: #eee;
   display: flex;
