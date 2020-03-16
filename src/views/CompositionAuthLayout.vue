@@ -9,17 +9,51 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { ref } from '@vue/composition-api'
+import { ref, onMounted, computed } from '@vue/composition-api'
 import AppHeader from '@/components/AppHeader.vue'
 import CompositionAuth from '@/components/CompositionAuth.vue'
+import firebase from 'firebase'
 
 export default Vue.extend({
   components: { CompositionAuth, AppHeader },
   setup() {
-    const authStatus = ref(false)
+    let loading = ref(false)
+
+    const authStatus = computed(() => 'foo')
+
+    function getAuthToken() {
+      const currentUser = firebase.auth().currentUser
+      if (currentUser) {
+        currentUser
+          .getIdToken(/* forceRefresh */ true)
+          .then(token => console.log(token)) // set token
+          .catch(error => console.error(error))
+      }
+    }
+
+    async function checkAuthState() {
+      await firebase.auth().onAuthStateChanged(user => {
+        if (user) {
+          // set user
+          // set logged in status to true
+          getAuthToken()
+          loading = false
+        } else {
+          // set logged in status to false
+          loading = false
+        }
+      })
+    }
+
+    onMounted(() => {
+      loading = true
+      checkAuthState()
+    })
 
     return {
+      loading,
       authStatus,
+      checkAuthState,
     }
   },
 })

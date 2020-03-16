@@ -60,7 +60,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { computed, ref, reactive } from '@vue/composition-api'
+import { ref, reactive } from '@vue/composition-api'
 import { UserCredentialDetails } from '@/classes'
 import firebase from 'firebase'
 
@@ -69,8 +69,6 @@ export default Vue.extend({
     const authMethodPicked = ref('log-in')
     const userDetails = reactive(new UserCredentialDetails())
     let errors = reactive({ code: '', message: '' })
-
-    const loggedInStatus = computed(() => 'foo')
 
     function logIn() {
       firebase
@@ -120,7 +118,6 @@ export default Vue.extend({
       authMethodPicked,
       userDetails,
       errors,
-      loggedInStatus,
       onAuthSubmit,
     }
   },

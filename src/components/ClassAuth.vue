@@ -60,7 +60,6 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
-import AuthStore from '@/store/authStore'
 import { UserCredentialDetails } from '@/classes'
 import firebase from 'firebase'
 
@@ -71,10 +70,6 @@ export default class Auth extends Vue {
   errors = {
     code: '',
     message: '',
-  }
-
-  get loggedInStatus() {
-    return AuthStore.isLoggedIn
   }
 
   logIn() {
