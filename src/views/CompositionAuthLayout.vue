@@ -1,5 +1,5 @@
 <template>
-  <div class="auth-layout">
+  <div v-if="!loading" class="auth-layout">
     <app-header :title="'Composition API Auth'" :auth-status="authStatus" />
     <h2>{{ authStatus ? 'Logged In' : 'Logged Out' }}</h2>
     <composition-auth />
@@ -8,55 +8,55 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { ref, onMounted, computed } from '@vue/composition-api'
+import { ref, onMounted } from '@vue/composition-api'
 import AppHeader from '@/components/AppHeader.vue'
 import CompositionAuth from '@/components/CompositionAuth.vue'
+import { useAuth } from '@/composables/auth'
 import firebase from 'firebase'
 
-export default Vue.extend({
+export default {
   components: { CompositionAuth, AppHeader },
   setup() {
-    let loading = ref(false)
+    const loading = ref(false)
+    const authStatus = ref(false)
 
-    const authStatus = computed(() => 'foo')
-
-    function getAuthToken() {
-      const currentUser = firebase.auth().currentUser
+    async function getAuthToken() {
+      const currentUser = await firebase.auth().currentUser
       if (currentUser) {
         currentUser
           .getIdToken(/* forceRefresh */ true)
-          .then(token => console.log(token)) // set token
+          .then(token => useAuth().setUserToken(token))
           .catch(error => console.error(error))
       }
     }
 
     async function checkAuthState() {
-      await firebase.auth().onAuthStateChanged(user => {
+      await firebase.auth().onAuthStateChanged(async user => {
         if (user) {
-          // set user
-          // set logged in status to true
-          getAuthToken()
-          loading = false
+          await useAuth().setLoggedInStatus(true)
+          await useAuth().setUser(firebase.auth().currentUser)
+          await getAuthToken()
         } else {
-          // set logged in status to false
-          loading = false
+          useAuth().setLoggedInStatus(false)
+          loading.value = false
         }
       })
     }
 
-    onMounted(() => {
-      loading = true
-      checkAuthState()
+    onMounted(async () => {
+      loading.value = true
+      await checkAuthState()
+      loading.value = false
     })
 
     return {
       loading,
       authStatus,
       checkAuthState,
+      useAuth,
     }
   },
-})
+}
 </script>
 
 <style lang="scss" scoped>

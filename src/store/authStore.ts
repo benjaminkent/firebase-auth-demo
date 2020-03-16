@@ -17,8 +17,8 @@ class AuthStore extends VuexModule {
   isLoggedIn = false
 
   @Mutation
-  setUser(userInfo: User | null) {
-    this.user = userInfo
+  setUser(userObj: User | null) {
+    this.user = userObj
   }
 
   @Mutation
