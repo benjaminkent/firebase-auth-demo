@@ -16,7 +16,6 @@ export default class Main extends Vue {
         this.$router.push({ name: 'classAuth' })
         break
       case 'comp':
-        console.log('foo')
         this.$router.push({ name: 'compositionAuth' })
         break
     }

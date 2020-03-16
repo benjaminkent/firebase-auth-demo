@@ -2,7 +2,7 @@
   <div class="auth-layout">
     <app-header :title="'Composition API Auth'" :auth-status="authStatus" />
     <h2>{{ authStatus ? 'Logged In' : 'Logged Out' }}</h2>
-    <auth />
+    <composition-auth />
     <router-link to="/" class="link">Go Home</router-link>
   </div>
 </template>
@@ -11,10 +11,10 @@
 import Vue from 'vue'
 import { ref } from '@vue/composition-api'
 import AppHeader from '@/components/AppHeader.vue'
-import Auth from '@/components/Auth.vue'
+import CompositionAuth from '@/components/CompositionAuth.vue'
 
 export default Vue.extend({
-  components: { Auth, AppHeader },
+  components: { CompositionAuth, AppHeader },
   setup() {
     const authStatus = ref(false)
 

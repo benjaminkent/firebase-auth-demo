@@ -60,8 +60,8 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
-import { UserCredentialDetails } from '@/classes'
 import AuthStore from '@/store/authStore'
+import { UserCredentialDetails } from '@/classes'
 import firebase from 'firebase'
 
 @Component({})
@@ -111,6 +111,7 @@ export default class Auth extends Vue {
     this.userDetails = {
       email: '',
       password: '',
+      passwordConfirmation: '',
     }
   }
 
@@ -119,7 +120,7 @@ export default class Auth extends Vue {
       this.logIn()
     } else {
       if (this.userDetails.password !== this.userDetails.passwordConfirmation) {
-        console.log('password does not match')
+        console.warn('password does not match')
         return
       }
       this.signUp()

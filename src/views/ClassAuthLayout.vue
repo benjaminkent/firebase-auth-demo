@@ -2,21 +2,21 @@
   <div v-if="!loading" class="auth-layout">
     <app-header :title="'Class Style Auth'" :auth-status="authStatus" />
     <h2>{{ authStatus ? 'Logged In' : 'Logged Out' }}</h2>
-    <auth />
+    <class-auth />
     <router-link to="/" class="link">Go Home</router-link>
   </div>
 </template>
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
-import Auth from '@/components/Auth.vue'
+import ClassAuth from '@/components/ClassAuth.vue'
 import AppHeader from '@/components/AppHeader.vue'
 import AuthStore from '@/store/authStore'
 import firebase from 'firebase'
 
 @Component({
   components: {
-    Auth,
+    ClassAuth,
     AppHeader,
   },
 })
