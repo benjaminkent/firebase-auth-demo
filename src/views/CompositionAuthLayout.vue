@@ -1,9 +1,6 @@
 <template>
   <div v-if="!showLoading" class="auth-layout">
-    <app-header
-      :title="'Composition API Auth'"
-      :auth-status="showLoggedInStatus"
-    />
+    <comp-header />
     <h2>{{ showLoggedInStatus ? 'Logged In' : 'Logged Out' }}</h2>
     <composition-auth />
     <router-link to="/" class="link">Go Home</router-link>
@@ -12,12 +9,12 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import AppHeader from '@/components/AppHeader.vue'
+import CompHeader from '@/components/CompHeader.vue'
 import CompositionAuth from '@/components/CompositionAuth.vue'
 import { useAuth } from '@/composables/auth'
 
 export default Vue.extend({
-  components: { CompositionAuth, AppHeader },
+  components: { CompositionAuth, CompHeader },
   setup() {
     const {
       showLoading,
