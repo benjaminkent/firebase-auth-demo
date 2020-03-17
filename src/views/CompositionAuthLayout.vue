@@ -11,11 +11,12 @@
 </template>
 
 <script lang="ts">
+import Vue from 'vue'
 import AppHeader from '@/components/AppHeader.vue'
 import CompositionAuth from '@/components/CompositionAuth.vue'
 import { useAuth } from '@/composables/auth'
 
-export default {
+export default Vue.extend({
   components: { CompositionAuth, AppHeader },
   setup() {
     const {
@@ -32,7 +33,7 @@ export default {
       showUserToken,
     }
   },
-}
+})
 </script>
 
 <style lang="scss" scoped>

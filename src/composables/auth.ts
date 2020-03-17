@@ -1,19 +1,20 @@
 import { ref, reactive, computed, onMounted } from '@vue/composition-api'
-import firebase, { User } from 'firebase'
+import firebase from 'firebase'
 
 export const useAuth = () => {
   // because i don't want to list
   // all 31 keys for user
   // eslint-disable-next-line
-  let user: any = reactive({})
-  // eslint-disable-next-line
-  let userToken: any = reactive({})
+  let userInfo: any = reactive({
+    user: {},
+  })
+  const userToken = ref('')
   const isLoggedIn = ref(false)
   const loading = ref(false)
 
   const showLoading = computed(() => loading.value)
   const showLoggedInStatus = computed(() => isLoggedIn.value)
-  const showUser = computed(() => user)
+  const showUser = computed(() => userInfo)
   const showUserToken = computed(() => userToken)
 
   const setAuthToken = async () => {
@@ -21,7 +22,7 @@ export const useAuth = () => {
     if (currentUser) {
       currentUser
         .getIdToken(/* forceRefresh */ true)
-        .then(token => (userToken = token))
+        .then(token => (userToken.value = token))
         .catch(error => console.error(error))
     }
   }
@@ -31,7 +32,7 @@ export const useAuth = () => {
     await firebase.auth().onAuthStateChanged(async user => {
       if (user) {
         isLoggedIn.value = true
-        user = await firebase.auth().currentUser
+        userInfo.user = await firebase.auth().currentUser
         setAuthToken()
         loading.value = false
       } else {
