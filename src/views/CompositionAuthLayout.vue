@@ -1,6 +1,9 @@
 <template>
   <div v-if="!showLoading" class="auth-layout">
-    <app-header :title="'Composition API Auth'" :auth-status="showLoggedInStatus" />
+    <app-header
+      :title="'Composition API Auth'"
+      :auth-status="showLoggedInStatus"
+    />
     <h2>{{ showLoggedInStatus ? 'Logged In' : 'Logged Out' }}</h2>
     <composition-auth />
     <router-link to="/" class="link">Go Home</router-link>
