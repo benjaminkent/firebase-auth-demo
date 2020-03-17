@@ -35,6 +35,10 @@ export const useAuth = () => {
       })
   }
 
+  const onLogOut = () => {
+    firebase.auth().signOut()
+  }
+
   const signUp = () => {
     firebase
       .auth()
@@ -108,5 +112,6 @@ export const useAuth = () => {
     onAuthSubmit,
     showInputUserDetails,
     showAuthMethodPicked,
+    onLogOut,
   }
 }
