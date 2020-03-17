@@ -52,7 +52,7 @@
         />
       </div>
       <button type="submit">
-        {{ showAuthMethodPicked === 'log-in' ? 'Log In' : 'Sign Up' }}
+        {{ showAuthMethodPicked.value === 'log-in' ? 'Log In' : 'Sign Up' }}
       </button>
     </form>
   </div>
