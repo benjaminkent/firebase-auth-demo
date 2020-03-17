@@ -6,7 +6,7 @@
         <input
           type="radio"
           id="log-in"
-          v-model="authMethodPicked"
+          v-model="showAuthMethodPicked.value"
           value="log-in"
           name="auth"
           checked
@@ -17,7 +17,7 @@
         <input
           type="radio"
           id="sign-up"
-          v-model="authMethodPicked"
+          v-model="showAuthMethodPicked.value"
           value="sign-up"
           name="auth"
         />
@@ -29,7 +29,7 @@
         <input
           id="email"
           type="email"
-          v-model="userDetails.email"
+          v-model="showInputUserDetails.email"
           placeholder="Email"
         />
       </div>
@@ -38,21 +38,21 @@
         <input
           id="password"
           type="password"
-          v-model="userDetails.password"
+          v-model="showInputUserDetails.password"
           placeholder="Password"
         />
       </div>
-      <div v-if="authMethodPicked === 'sign-up'" class="form-group">
+      <div v-if="showAuthMethodPicked.value === 'sign-up'" class="form-group">
         <label for="password-confirmation">Confirm</label>
         <input
           id="password-confirmation"
           type="password"
-          v-model="userDetails.passwordConfirmation"
+          v-model="showInputUserDetails.passwordConfirmation"
           placeholder="Confirm Password"
         />
       </div>
       <button type="submit">
-        {{ authMethodPicked === 'log-in' ? 'Log In' : 'Sign Up' }}
+        {{ showAuthMethodPicked === 'log-in' ? 'Log In' : 'Sign Up' }}
       </button>
     </form>
   </div>
@@ -60,65 +60,20 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { ref, reactive } from '@vue/composition-api'
-import { UserCredentialDetails } from '@/classes'
-import firebase from 'firebase'
+import { useAuth } from '@/composables/auth'
 
 export default Vue.extend({
   setup() {
-    const authMethodPicked = ref('log-in')
-    const userDetails = reactive(new UserCredentialDetails())
-    let errors = reactive({ code: '', message: '' })
-
-    function logIn() {
-      firebase
-        .auth()
-        .signInWithEmailAndPassword(userDetails.email, userDetails.password)
-        .catch(error => {
-          errors = {
-            code: error.code,
-            message: error.message,
-          }
-        })
-    }
-
-    function signUp() {
-      firebase
-        .auth()
-        .createUserWithEmailAndPassword(userDetails.email, userDetails.password)
-        .catch(error => {
-          errors = {
-            code: error.code,
-            message: error.message,
-          }
-        })
-    }
-
-    function clearUserDetails() {
-      userDetails.email = ''
-      userDetails.password = ''
-      userDetails.passwordConfirmation = ''
-    }
-
-    function onAuthSubmit() {
-      if (authMethodPicked.value === 'log-in') {
-        logIn()
-      } else {
-        if (userDetails.password !== userDetails.passwordConfirmation) {
-          console.warn('password does not match')
-          return
-        }
-        signUp()
-      }
-
-      clearUserDetails()
-    }
+    const {
+      onAuthSubmit,
+      showInputUserDetails,
+      showAuthMethodPicked,
+    } = useAuth()
 
     return {
-      authMethodPicked,
-      userDetails,
-      errors,
       onAuthSubmit,
+      showInputUserDetails,
+      showAuthMethodPicked,
     }
   },
 })
