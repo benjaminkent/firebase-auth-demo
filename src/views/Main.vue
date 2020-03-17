@@ -1,7 +1,7 @@
 <template>
   <div class="main">
-    <button @click="goToAuth">Class style auth</button>
-    <button>Composition API auth</button>
+    <button @click="goToAuth('class')">Class style auth</button>
+    <button @click="goToAuth('comp')">Composition API auth</button>
   </div>
 </template>
 
@@ -10,8 +10,15 @@ import { Vue, Component } from 'vue-property-decorator'
 
 @Component({})
 export default class Main extends Vue {
-  goToAuth() {
-    this.$router.push({ name: 'auth' })
+  goToAuth(val: string) {
+    switch (val) {
+      case 'class':
+        this.$router.push({ name: 'classAuth' })
+        break
+      case 'comp':
+        this.$router.push({ name: 'compositionAuth' })
+        break
+    }
   }
 }
 </script>

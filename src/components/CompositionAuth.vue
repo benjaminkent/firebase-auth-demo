@@ -14,17 +14,33 @@
       </div>
       <div class="input-group">
         <label for="sign-up">Sign Up</label>
-        <input type="radio" id="sign-up" v-model="authMethodPicked" value="sign-up" name="auth" />
+        <input
+          type="radio"
+          id="sign-up"
+          v-model="authMethodPicked"
+          value="sign-up"
+          name="auth"
+        />
       </div>
     </form>
     <form @submit.prevent="onAuthSubmit" class="creds-form">
       <div class="form-group">
         <label for="email">Email</label>
-        <input id="email" type="email" v-model="userDetails.email" placeholder="Email" />
+        <input
+          id="email"
+          type="email"
+          v-model="userDetails.email"
+          placeholder="Email"
+        />
       </div>
       <div class="form-group">
         <label for="password">Password</label>
-        <input id="password" type="password" v-model="userDetails.password" placeholder="Password" />
+        <input
+          id="password"
+          type="password"
+          v-model="userDetails.password"
+          placeholder="Password"
+        />
       </div>
       <div v-if="authMethodPicked === 'sign-up'" class="form-group">
         <label for="password-confirmation">Confirm</label>
@@ -35,88 +51,77 @@
           placeholder="Confirm Password"
         />
       </div>
-      <button type="submit">{{ authMethodPicked === 'log-in' ? 'Log In' : 'Sign Up' }}</button>
+      <button type="submit">
+        {{ authMethodPicked === 'log-in' ? 'Log In' : 'Sign Up' }}
+      </button>
     </form>
   </div>
 </template>
 
 <script lang="ts">
-import { Vue, Component, Watch } from 'vue-property-decorator'
+import Vue from 'vue'
+import { ref, reactive } from '@vue/composition-api'
 import { UserCredentialDetails } from '@/classes'
-import AuthStore from '@/store/authStore'
 import firebase from 'firebase'
 
-@Component({})
-export default class Auth extends Vue {
-  authMethodPicked = 'log-in'
-  userDetails = new UserCredentialDetails()
-  errors = {
-    code: '',
-    message: '',
-  }
+export default Vue.extend({
+  setup() {
+    const authMethodPicked = ref('log-in')
+    const userDetails = reactive(new UserCredentialDetails())
+    let errors = reactive({ code: '', message: '' })
 
-  get loggedInStatus() {
-    return AuthStore.isLoggedIn
-  }
-
-  @Watch('loggedInStatus', { deep: true })
-  watchLoggedInStatus(val: boolean) {
-    if (val === true) {
-      this.$router.push({ name: 'main' })
+    function logIn() {
+      firebase
+        .auth()
+        .signInWithEmailAndPassword(userDetails.email, userDetails.password)
+        .catch(error => {
+          errors = {
+            code: error.code,
+            message: error.message,
+          }
+        })
     }
-  }
 
-  logIn() {
-    firebase
-      .auth()
-      .signInWithEmailAndPassword(
-        this.userDetails.email,
-        this.userDetails.password
-      )
-      .catch(error => {
-        this.errors = {
-          code: error.code,
-          message: error.message,
-        }
-      })
-  }
-
-  signUp() {
-    firebase
-      .auth()
-      .createUserWithEmailAndPassword(
-        this.userDetails.email,
-        this.userDetails.password
-      )
-      .catch(error => {
-        this.errors = {
-          code: error.code,
-          message: error.message,
-        }
-      })
-  }
-
-  clearUserDetails() {
-    this.userDetails = {
-      email: '',
-      password: '',
+    function signUp() {
+      firebase
+        .auth()
+        .createUserWithEmailAndPassword(userDetails.email, userDetails.password)
+        .catch(error => {
+          errors = {
+            code: error.code,
+            message: error.message,
+          }
+        })
     }
-  }
 
-  onAuthSubmit() {
-    if (this.authMethodPicked === 'log-in') {
-      this.logIn()
-    } else {
-      if (this.userDetails.password !== this.userDetails.passwordConfirmation) {
-        console.log('password does not match')
-        return
+    function clearUserDetails() {
+      userDetails.email = ''
+      userDetails.password = ''
+      userDetails.passwordConfirmation = ''
+    }
+
+    function onAuthSubmit() {
+      if (authMethodPicked.value === 'log-in') {
+        logIn()
+      } else {
+        if (userDetails.password !== userDetails.passwordConfirmation) {
+          console.warn('password does not match')
+          return
+        }
+        signUp()
       }
-      this.signUp()
+
+      clearUserDetails()
     }
 
-    this.clearUserDetails()
-  }
-}
+    return {
+      authMethodPicked,
+      userDetails,
+      errors,
+      onAuthSubmit,
+    }
+  },
+})
 </script>
 
 <style lang="scss" scoped>
